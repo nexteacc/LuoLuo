@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 
 export const Header = () => {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   // 从 localStorage 加载搜索历史
   useEffect(() => {
     const history = localStorage.getItem("searchHistory");
     if (history) {
-      setSearchHistory(JSON.parse(history));
+      const parsed = JSON.parse(history);
+      setSearchHistory(parsed);
+      setHasSearched(parsed.length > 0);
     }
   }, []);
 
@@ -17,10 +20,13 @@ export const Header = () => {
   useEffect(() => {
     const handleSearch = (event: CustomEvent) => {
       const query = event.detail.query;
-      if (query && !searchHistory.includes(query)) {
-        const newHistory = [query, ...searchHistory].slice(0, 10); // 最多保存10条
-        setSearchHistory(newHistory);
-        localStorage.setItem("searchHistory", JSON.stringify(newHistory));
+      if (query) {
+        setHasSearched(true);
+        if (!searchHistory.includes(query)) {
+          const newHistory = [query, ...searchHistory].slice(0, 10);
+          setSearchHistory(newHistory);
+          localStorage.setItem("searchHistory", JSON.stringify(newHistory));
+        }
       }
     };
 
@@ -41,16 +47,22 @@ export const Header = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-8">
-      {/* 标题 - 添加动画 */}
-      <div className="flex flex-col gap-0 text-center animate-float">
+    <div 
+      className={`flex flex-col transition-all duration-700 ${
+        hasSearched 
+          ? "items-start justify-start pt-8" 
+          : "h-screen items-center justify-center"
+      }`}
+    >
+      {/* 标题 */}
+      <div className="flex flex-col gap-0 text-center">
         <h1 className="text-6xl font-bold leading-tight">2025</h1>
         <h1 className="text-6xl font-bold leading-tight">影像</h1>
       </div>
 
       {/* 搜索历史标签 */}
-      {searchHistory.length > 0 && (
-        <div className="w-full max-w-xs space-y-2">
+      {hasSearched && searchHistory.length > 0 && (
+        <div className="mt-8 w-full space-y-3 animate-fade-in">
           <p className="text-muted-foreground text-sm">搜索历史</p>
           <div className="flex flex-wrap gap-2">
             {searchHistory.map((query, index) => (
@@ -58,7 +70,7 @@ export const Header = () => {
                 key={`${query}-${index}`}
                 type="button"
                 onClick={() => handleTagClick(query)}
-                className="rounded-full bg-secondary px-3 py-1 text-sm transition-colors hover:bg-secondary/80"
+                className="rounded-full bg-secondary px-3 py-1.5 text-sm transition-all hover:bg-secondary/80 hover:scale-105"
               >
                 {query}
               </button>
