@@ -1,38 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSearchHistory } from "./search-history-provider";
 
 export const Header = () => {
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  // 从 localStorage 加载搜索历史
-  useEffect(() => {
-    const history = localStorage.getItem("searchHistory");
-    if (history) {
-      const parsed = JSON.parse(history);
-      setSearchHistory(parsed);
-      setHasSearched(parsed.length > 0);
-    }
-  }, []);
-
-  // 监听搜索事件
-  useEffect(() => {
-    const handleSearch = (event: CustomEvent) => {
-      const query = event.detail.query;
-      if (query) {
-        setHasSearched(true);
-        if (!searchHistory.includes(query)) {
-          const newHistory = [query, ...searchHistory].slice(0, 10);
-          setSearchHistory(newHistory);
-          localStorage.setItem("searchHistory", JSON.stringify(newHistory));
-        }
-      }
-    };
-
-    window.addEventListener("search-performed" as any, handleSearch);
-    return () => window.removeEventListener("search-performed" as any, handleSearch);
-  }, [searchHistory]);
+  const { searchHistory, hasSearched, addSearchQuery } = useSearchHistory();
 
   // 点击标签执行搜索
   const handleTagClick = (query: string) => {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Header } from "@/components/header";
 import { Results } from "@/components/results";
+import { SearchHistoryProvider } from "@/components/search-history-provider";
 import { UploadedImagesProvider } from "@/components/uploaded-images-provider";
 
 export const metadata: Metadata = {
@@ -29,14 +30,16 @@ const ImagesSkeleton = () => (
 
 const Home = () => (
   <UploadedImagesProvider>
-    <div className="container relative mx-auto grid items-start gap-12 px-4 py-8 sm:gap-16 lg:grid-cols-[300px_1fr]">
-      <div className="lg:sticky lg:top-8">
-        <Header />
+    <SearchHistoryProvider>
+      <div className="container relative mx-auto grid items-start gap-12 px-4 py-8 sm:gap-16 lg:grid-cols-[300px_1fr]">
+        <div className="lg:sticky lg:top-8">
+          <Header />
+        </div>
+        <Suspense fallback={<ImagesSkeleton />}>
+          <Results />
+        </Suspense>
       </div>
-      <Suspense fallback={<ImagesSkeleton />}>
-        <Results />
-      </Suspense>
-    </div>
+    </SearchHistoryProvider>
   </UploadedImagesProvider>
 );
 

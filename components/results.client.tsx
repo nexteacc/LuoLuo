@@ -16,6 +16,7 @@ import { Preview } from "./preview";
 import { Button } from "./ui/button";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "./ui/empty";
 import { Input } from "./ui/input";
+import { useSearchHistory } from "./search-history-provider";
 import { UploadButton } from "./upload-button";
 import { useUploadedImages } from "./uploaded-images-provider";
 
@@ -27,8 +28,9 @@ const PRIORITY_COUNT = 12;
 
 export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
   const { images } = useUploadedImages();
+  const { addSearchQuery } = useSearchHistory();
   const [state, formAction, isPending] = useActionState(search, { data: [] });
-  const formRef = useRef<HTMLFormElement>(null);
+  const lastQueryRef = useRef<string>("");
 
   useEffect(() => {
     if ("error" in state) {
@@ -36,21 +38,25 @@ export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
     }
   }, [state]);
 
-  // 搜索成功后触发事件，记录搜索历史
-  useEffect(() => {
-    if ("data" in state && state.data.length > 0) {
-      const searchInput = formRef.current?.querySelector('input[name="search"]') as HTMLInputElement;
-      if (searchInput?.value) {
-        window.dispatchEvent(new CustomEvent("search-performed", { 
-          detail: { query: searchInput.value } 
-        }));
-      }
-    }
-  }, [state]);
-
   const reset = () => {
     window.location.reload();
   };
+
+  // 处理表单提交，在提交前保存搜索词
+  const handleSubmit = (formData: FormData) => {
+    const query = formData.get("search") as string;
+    if (query) {
+      lastQueryRef.current = query;
+    }
+    formAction(formData);
+  };
+
+  // 搜索完成后记录历史
+  useEffect(() => {
+    if ("data" in state && lastQueryRef.current) {
+      addSearchQuery(lastQueryRef.current);
+    }
+  }, [state, addSearchQuery]);
 
   const hasImages =
     images.length ||
@@ -109,8 +115,7 @@ export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
       )}
 
       <form
-        ref={formRef}
-        action={formAction}
+        action={handleSubmit}
         className="-translate-x-1/2 fixed bottom-8 left-1/2 flex w-full max-w-sm items-center gap-1 rounded-full bg-background p-1 shadow-xl sm:max-w-lg lg:ml-[182px]"
       >
         {"data" in state && state.data.length > 0 && (
