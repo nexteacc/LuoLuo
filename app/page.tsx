@@ -33,7 +33,8 @@ const Home = () => (
     <SearchHistoryProvider>
       <div className="relative min-h-screen">
         <Header />
-        <div className="container relative mx-auto px-4 py-8">
+        {/* 主内容区域 - 左侧留出搜索历史空间 */}
+        <div className="ml-[320px] mr-8 py-8">
           <Suspense fallback={<ImagesSkeleton />}>
             <Results />
           </Suspense>

@@ -116,7 +116,7 @@ export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
 
       <form
         action={handleSubmit}
-        className="-translate-x-1/2 fixed bottom-8 left-1/2 flex w-full max-w-sm items-center gap-1 rounded-full bg-background p-1 shadow-xl sm:max-w-lg"
+        className="-translate-x-1/2 fixed bottom-8 left-1/2 flex w-full max-w-sm items-center gap-1 rounded-full bg-background p-1 shadow-xl sm:max-w-lg z-50"
       >
         {"data" in state && state.data.length > 0 && (
           <Button
