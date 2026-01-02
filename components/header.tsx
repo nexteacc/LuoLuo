@@ -1,15 +1,26 @@
 "use client";
 
 import { useSearchHistory } from "./search-history-provider";
+import { useState, useEffect } from "react";
 
 export const Header = () => {
   const { searchHistory, hasSearched } = useSearchHistory();
+  const [selectedQuery, setSelectedQuery] = useState<string>("");
+
+  // 从搜索框获取当前查询词
+  useEffect(() => {
+    const searchInput = document.querySelector('input[name="search"]') as HTMLInputElement;
+    if (searchInput) {
+      setSelectedQuery(searchInput.value);
+    }
+  }, []);
 
   // 点击标签执行搜索
   const handleTagClick = (query: string) => {
     const searchInput = document.querySelector('input[name="search"]') as HTMLInputElement;
     if (searchInput) {
       searchInput.value = query;
+      setSelectedQuery(query);
       const form = searchInput.closest("form");
       if (form) {
         form.requestSubmit();
@@ -46,7 +57,11 @@ export const Header = () => {
                   key={`${query}-${index}`}
                   type="button"
                   onClick={() => handleTagClick(query)}
-                  className="animate-fade-in-up rounded-full bg-secondary px-4 py-2 text-sm transition-all duration-200 hover:bg-secondary/70 active:scale-95"
+                  className={`animate-fade-in-up rounded-full px-4 py-2 text-sm transition-all duration-200 ${
+                    selectedQuery === query
+                      ? "border-2 border-foreground bg-secondary font-semibold"
+                      : "bg-secondary hover:bg-secondary/70"
+                  } active:scale-95`}
                   style={{ animationDelay: `${index * 80}ms` }}
                 >
                   {query}
