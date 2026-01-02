@@ -28,7 +28,11 @@ export const search = async (
 
   try {
     console.log("Searching index for query:", query);
-    const results = await index.search({ query });
+    const results = await index.search({ 
+      query,
+      limit: 20,
+      semanticWeight: 0.6,
+    });
 
     console.log("Results:", results);
     const data = results
