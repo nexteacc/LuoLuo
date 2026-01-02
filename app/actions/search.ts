@@ -32,7 +32,8 @@ export const search = async (
     const results = await index.search({ 
       query,
       limit: 20,
-      semanticWeight: 0.6,
+      semanticWeight: 0.2,
+      inputEnrichment: false,
     });
 
     console.log("Results:", results);
