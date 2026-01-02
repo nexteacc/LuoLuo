@@ -31,17 +31,11 @@ export const search = async (
     
     const results = await index.search({ 
       query,
-      limit: 20,
-      semanticWeight: 0.2,
-      inputEnrichment: false,
     });
 
     console.log("Results:", results);
     
-    // 过滤掉低相关性的结果
-    const filteredResults = results.filter(result => result.score >= 0.6);
-    
-    const data = filteredResults
+    const data = results
       .sort((a, b) => b.score - a.score)
       .map((result) => result.metadata)
       .filter(Boolean) as unknown as PutBlobResult[];
