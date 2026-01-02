@@ -31,13 +31,13 @@ const ImagesSkeleton = () => (
 const Home = () => (
   <UploadedImagesProvider>
     <SearchHistoryProvider>
-      <div className="container relative mx-auto grid items-start gap-12 px-4 py-8 sm:gap-16 lg:grid-cols-[300px_1fr]">
-        <div className="lg:sticky lg:top-8">
-          <Header />
+      <div className="relative min-h-screen">
+        <Header />
+        <div className="container relative mx-auto px-4 py-8">
+          <Suspense fallback={<ImagesSkeleton />}>
+            <Results />
+          </Suspense>
         </div>
-        <Suspense fallback={<ImagesSkeleton />}>
-          <Results />
-        </Suspense>
       </div>
     </SearchHistoryProvider>
   </UploadedImagesProvider>

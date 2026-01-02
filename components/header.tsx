@@ -29,12 +29,12 @@ export const Header = () => {
   };
 
   return (
-    <div className="relative h-screen">
+    <div className="fixed inset-0 pointer-events-none">
       {/* 标题 - 用 transform 实现从中央到左上角的移动 */}
       <div 
-        className={`absolute transition-all duration-700 ease-out ${
+        className={`absolute transition-all duration-700 ease-out pointer-events-auto ${
           hasSearched 
-            ? "left-0 top-8" 
+            ? "left-8 top-8" 
             : "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         }`}
       >
@@ -46,18 +46,18 @@ export const Header = () => {
         }`}>影像</h1>
       </div>
 
-      {/* 搜索历史标签 - 垂直居中 */}
+      {/* 搜索历史标签 - 左侧垂直居中 */}
       {hasSearched && searchHistory.length > 0 && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full">
-          <div className="w-full space-y-3 animate-fade-in">
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 pointer-events-auto">
+          <div className="space-y-3 animate-fade-in">
             <p className="text-muted-foreground text-sm">搜索历史</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-2">
               {searchHistory.map((query, index) => (
                 <button
                   key={`${query}-${index}`}
                   type="button"
                   onClick={() => handleTagClick(query)}
-                  className={`animate-fade-in-up rounded-full px-4 py-2 text-sm transition-all duration-200 ${
+                  className={`animate-fade-in-up rounded-full px-4 py-2 text-sm transition-all duration-200 whitespace-nowrap ${
                     selectedQuery === query
                       ? "border-2 border-foreground bg-secondary font-semibold"
                       : "bg-secondary hover:bg-secondary/70"
