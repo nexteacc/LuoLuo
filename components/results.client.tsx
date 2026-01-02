@@ -9,7 +9,7 @@ import {
   Loader2Icon,
   UploadIcon,
 } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { search } from "@/app/actions/search";
 import { Preview } from "./preview";
@@ -28,10 +28,23 @@ const PRIORITY_COUNT = 12;
 export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
   const { images } = useUploadedImages();
   const [state, formAction, isPending] = useActionState(search, { data: [] });
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if ("error" in state) {
       toast.error(state.error);
+    }
+  }, [state]);
+
+  // 搜索成功后触发事件，记录搜索历史
+  useEffect(() => {
+    if ("data" in state && state.data.length > 0) {
+      const searchInput = formRef.current?.querySelector('input[name="search"]') as HTMLInputElement;
+      if (searchInput?.value) {
+        window.dispatchEvent(new CustomEvent("search-performed", { 
+          detail: { query: searchInput.value } 
+        }));
+      }
     }
   }, [state]);
 
@@ -96,6 +109,7 @@ export const ResultsClient = ({ defaultData }: ResultsClientProps) => {
       )}
 
       <form
+        ref={formRef}
         action={formAction}
         className="-translate-x-1/2 fixed bottom-8 left-1/2 flex w-full max-w-sm items-center gap-1 rounded-full bg-background p-1 shadow-xl sm:max-w-lg lg:ml-[182px]"
       >
