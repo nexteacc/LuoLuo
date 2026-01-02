@@ -31,6 +31,7 @@ export const search = async (
     
     const results = await index.search({ 
       query,
+      limit: 20,
     });
 
     console.log("Results:", results);
