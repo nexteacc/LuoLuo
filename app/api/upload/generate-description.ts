@@ -24,7 +24,7 @@ export const generateDescription = async (blob: PutBlobResult) => {
     const { text } = await generateText({
       model: "google/gemini-2.0-flash",
       system:
-        "Analyze the image and provide a comprehensive . Focus on visual elements, objects, colors, text (if any), setting, and mood. Be objective and precise.",
+        "Analyze the image and provide a comprehensive description. Focus on visual elements, objects, colors, text (if any), setting, and mood. Be objective and precise.",
       messages: [
         {
           role: "user",
