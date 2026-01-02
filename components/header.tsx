@@ -17,29 +17,26 @@ export const Header = () => {
     }
   };
 
-  // 初始状态：标题居中
-  if (!hasSearched) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center">
-        <div className="flex flex-col gap-0 text-center">
-          <h1 className="text-6xl font-bold leading-tight">2025</h1>
-          <h1 className="text-6xl font-bold leading-tight">影像</h1>
-        </div>
-      </div>
-    );
-  }
-
-  // 搜索后：标题在左上角，搜索历史在左侧垂直居中
   return (
     <div className="flex h-screen flex-col">
-      {/* 标题 - 左上角 */}
-      <div className="pt-8">
-        <h1 className="text-4xl font-bold leading-tight">2025</h1>
-        <h1 className="text-4xl font-bold leading-tight">影像</h1>
+      {/* 标题 - 带过渡动画 */}
+      <div 
+        className={`flex flex-col gap-0 transition-all duration-700 ease-out ${
+          hasSearched 
+            ? "pt-8" 
+            : "flex-1 items-center justify-center"
+        }`}
+      >
+        <h1 className={`font-bold leading-tight transition-all duration-700 ${
+          hasSearched ? "text-4xl" : "text-6xl"
+        }`}>2025</h1>
+        <h1 className={`font-bold leading-tight transition-all duration-700 ${
+          hasSearched ? "text-4xl" : "text-6xl"
+        }`}>影像</h1>
       </div>
 
       {/* 搜索历史标签 - 垂直居中 */}
-      {searchHistory.length > 0 && (
+      {hasSearched && searchHistory.length > 0 && (
         <div className="flex flex-1 items-center">
           <div className="w-full space-y-3 animate-fade-in">
             <p className="text-muted-foreground text-sm">搜索历史</p>
@@ -49,7 +46,7 @@ export const Header = () => {
                   key={`${query}-${index}`}
                   type="button"
                   onClick={() => handleTagClick(query)}
-                  className="rounded-full bg-secondary px-3 py-1.5 text-sm transition-all hover:bg-secondary/80 hover:scale-105"
+                  className="rounded-full bg-secondary px-4 py-2 text-sm transition-all duration-200 hover:bg-secondary/70 active:scale-95"
                 >
                   {query}
                 </button>
@@ -58,6 +55,9 @@ export const Header = () => {
           </div>
         </div>
       )}
+
+      {/* 占位，保持布局平衡 */}
+      {!hasSearched && <div className="flex-1" />}
     </div>
   );
 };

@@ -34,25 +34,13 @@ export const SearchHistoryProvider = ({ children }: SearchHistoryProviderProps) 
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // 从 localStorage 加载搜索历史
-  useEffect(() => {
-    const history = localStorage.getItem("searchHistory");
-    if (history) {
-      const parsed = JSON.parse(history);
-      setSearchHistory(parsed);
-      setHasSearched(parsed.length > 0);
-    }
-  }, []);
-
   const addSearchQuery = useCallback((query: string) => {
     if (!query) return;
     
     setHasSearched(true);
     setSearchHistory((prev) => {
       if (prev.includes(query)) return prev;
-      const newHistory = [query, ...prev].slice(0, 10);
-      localStorage.setItem("searchHistory", JSON.stringify(newHistory));
-      return newHistory;
+      return [query, ...prev].slice(0, 10);
     });
   }, []);
 
