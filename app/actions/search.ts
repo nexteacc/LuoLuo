@@ -37,7 +37,10 @@ export const search = async (
 
     console.log("Results:", results);
     
-    const data = results
+    // 过滤掉低相关性的结果
+    const filteredResults = results.filter(result => result.score >= 0.6);
+    
+    const data = filteredResults
       .sort((a, b) => b.score - a.score)
       .map((result) => result.metadata)
       .filter(Boolean) as unknown as PutBlobResult[];
