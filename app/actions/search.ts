@@ -28,6 +28,12 @@ export const search = async (
 
   try {
     console.log("Searching index for query:", query);
+    
+    // 触发搜索事件，用于记录搜索历史
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("search-performed", { detail: { query } }));
+    }
+    
     const results = await index.search({ 
       query,
       limit: 20,
