@@ -5,7 +5,10 @@
 import { Search } from "@upstash/search";
 import type { PutBlobResult } from "@vercel/blob";
 
-const upstash = Search.fromEnv();
+const upstash = new Search({
+  url: process.env.UPSTASH_VECTOR_REST_URL!,
+  token: process.env.UPSTASH_VECTOR_REST_TOKEN!,
+});
 const index = upstash.index("images");
 
 type SearchResponse =
