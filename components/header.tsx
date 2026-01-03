@@ -29,12 +29,12 @@ export const Header = () => {
 
   return (
     <>
-      {/* 标题 - 固定定位，从中央到左上角的动画 */}
+      {/* 标题 - 固定定位，在左侧区域从中央到左上角的动画 */}
       <div 
         className={`fixed z-40 transition-all duration-700 ease-out ${
           hasSearched 
             ? "left-8 top-8" 
-            : "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            : "left-40 top-1/2 -translate-x-1/2 -translate-y-1/2"
         }`}
       >
         <h1 className={`font-bold leading-tight transition-all duration-700 ${
